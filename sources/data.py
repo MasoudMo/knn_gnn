@@ -1,6 +1,7 @@
 import wfdb
 import numpy as np
 import matplotlib.pyplot as plt
+import wfdb.plot as wfplt
 from torch.utils.data import Dataset
 import os
 
@@ -27,9 +28,8 @@ class PtbEcgDataSet(Dataset):
 
         # These records are not diagnosed
         if records_to_exclude is None:
-            records_to_exclude = [412, 358, 355, 395, 376, 348, 372, 410, 364, 516, 529, 515, 392, 338, 412, 333, 512,
-                                  409, 422, 523, 401, 396, 397, 414, 389, 499, 401, 395, 513, 507, 411, 502, 352, 370,
-                                  387, 403, 503]
+            records_to_exclude = [421, 348, 536, 338, 358, 429, 395, 377, 419, 398, 367, 412, 416, 522, 333, 523, 378,
+                                  375, 397, 519, 530, 406, 524, 355, 356, 407, 417]
 
         # Dictionary of diagnosis
         self.diagnosis = {'Reason for admission: Healthy control': 0,
@@ -54,8 +54,8 @@ class PtbEcgDataSet(Dataset):
         records_file = open(records_dir)
         self.records_dirs = [os.path.join(root_dir, s) for s in records_file.read().split('\n')]
 
-        for idx in records_to_exclude:
-            del self.records_dirs[idx]
+        # Remove data points with no diagnosis
+        self.records_dirs = [i for j, i in enumerate(self.records_dirs) if j not in records_to_exclude]
 
         self.num_samples = len(self.records_dirs)
 
@@ -71,7 +71,9 @@ class PtbEcgDataSet(Dataset):
             (int): Label indicating whether the core is cancerous or healthy
         """
 
-        record = wfdb.io.rdrecord(self.records_dirs[idx])
+        record = wfdb.io.rdrecord(self.records_dirs[idx], sammpto=31000)
+
+        self.size.append(record.p_signal.shape[0])
 
         # Obtain the label for the specified record
         label = self.diagnosis[record.comments[4]]
