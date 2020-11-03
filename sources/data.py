@@ -71,9 +71,7 @@ class PtbEcgDataSet(Dataset):
             (int): Label indicating whether the core is cancerous or healthy
         """
 
-        record = wfdb.io.rdrecord(self.records_dirs[idx], sammpto=31000)
-
-        self.size.append(record.p_signal.shape[0])
+        record = wfdb.io.rdrecord(self.records_dirs[idx], sampto=31000)
 
         # Obtain the label for the specified record
         label = self.diagnosis[record.comments[4]]

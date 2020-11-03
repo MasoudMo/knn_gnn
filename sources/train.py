@@ -1,4 +1,4 @@
-from sources.data import PtbEcgDataSet
+from ecg_gnn.sources.data import PtbEcgDataSet
 from torch.utils.data import DataLoader
 
 
