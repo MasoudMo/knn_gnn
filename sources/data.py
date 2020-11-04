@@ -4,6 +4,18 @@ import matplotlib.pyplot as plt
 import wfdb.plot as wfplt
 from torch.utils.data import Dataset
 import os
+from scipy.sparse import coo_matrix
+import dgl
+import torch
+
+
+def collate(samples):
+    """
+    Collate function used by the data loader to put graphs into a batch
+    """
+    graphs, labels = map(list, zip(*samples))
+    batched_graph = dgl.batch(graphs)
+    return batched_graph, torch.tensor(labels, dtype=torch.long)
 
 
 class PtbEcgDataSet(Dataset):
@@ -73,10 +85,18 @@ class PtbEcgDataSet(Dataset):
 
         record = wfdb.io.rdrecord(self.records_dirs[idx], sampto=31000)
 
+        adjacency_mat = np.ones((15, 15))
+        adjacency_mat = coo_matrix(adjacency_mat)
+
+        g = dgl.DGLGraph()
+        g.from_scipy_sparse_matrix(adjacency_mat)
+
+        g.nodes[:].data['x'] = torch.from_numpy(np.transpose(record.p_signal.astype(np.float32)))
+
         # Obtain the label for the specified record
         label = self.diagnosis[record.comments[4]]
 
-        return label
+        return g, label
 
     def __len__(self):
         """
