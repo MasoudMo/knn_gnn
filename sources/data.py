@@ -14,6 +14,7 @@ from datetime import datetime
 import logging
 import torch
 from scipy import fft
+from scipy import signal
 
 try:
     from knn_cuda import KNN
@@ -256,6 +257,7 @@ class PtbEcgDataSet(Dataset):
         self.fft_graph = fft_graph
         self.fft_points_to_keep = fft_points_to_keep
         self.pca_dim = pca_dim
+        self.filter = filter
 
     def __getitem__(self, idx):
         """
@@ -270,13 +272,31 @@ class PtbEcgDataSet(Dataset):
         record = wfdb.io.rdrecord(self.records_dirs[idx], sampfrom=self.samp_from, sampto=self.samp_to)
         time_domain_data = np.transpose(record.p_signal).astype(np.float)
 
+        if self.filter:
+            cut_off_freq = 5 / (record.fs/2)
+
+            # Generate filter coefficients
+            b, a = signal.butter(5, cut_off_freq, 'highpass')
+
+            filtered_time_domain_data = np.empty_like(time_domain_data)
+
+            for idx in range(time_domain_data.shape[0]):
+                filtered_time_domain_data[idx, :] = signal.filtfilt(b, a, time_domain_data[idx, :])
+
         if self.fft_graph or self.fft_data:
             if self.fft_points_to_keep:
-                # Find FFT and only keep the first half (half of sampling frequency)
-                freq_domain_data = np.abs(fft(time_domain_data))[:, :self.fft_points_to_keep].astype(np.float)
+                if self.filter:
+                    # Find FFT and only keep the first half (half of sampling frequency)
+                    freq_domain_data = np.abs(fft(filtered_time_domain_data))[:, :self.fft_points_to_keep].astype(np.float)
+                else:
+                    freq_domain_data = np.abs(fft(time_domain_data))[:, :self.fft_points_to_keep].astype(np.float)
             else:
-                # Find FFT and only keep the first half (half of sampling frequency)
-                freq_domain_data = np.abs(fft(time_domain_data))[:, :(int(time_domain_data.shape[1]/2))].astype(np.float)
+                if self.filter:
+                    # Find FFT and only keep the first half (half of sampling frequency)
+                    freq_domain_data = np.abs(fft(cut_off_freq))[:, :(int(cut_off_freq.shape[1]/2))].astype(np.float)
+                else:
+                    freq_domain_data = np.abs(fft(time_domain_data))[:, :(int(time_domain_data.shape[1] / 2))].astype(
+                        np.float)
 
         if self.fft_graph:
             adjacency_mat = create_knn_adj_mat(freq_domain_data,
@@ -302,11 +322,19 @@ class PtbEcgDataSet(Dataset):
                 g.ndata['x'] = torch.from_numpy(freq_domain_data)
         else:
             if self.pca_dim:
-                pca = PCA(n_components=self.pca_dim)
-                pca.fit(time_domain_data)
-                g.ndata['x'] = torch.from_numpy(pca.transform(time_domain_data))
+                if self.filter:
+                    pca = PCA(n_components=self.pca_dim)
+                    pca.fit(filtered_time_domain_data)
+                    g.ndata['x'] = torch.from_numpy(pca.transform(filtered_time_domain_data))
+                else:
+                    pca = PCA(n_components=self.pca_dim)
+                    pca.fit(time_domain_data)
+                    g.ndata['x'] = torch.from_numpy(pca.transform(time_domain_data))
             else:
-                g.ndata['x'] = torch.from_numpy(time_domain_data)
+                if self.filter:
+                    g.ndata['x'] = torch.from_numpy(filtered_time_domain_data)
+                else:
+                    g.ndata['x'] = torch.from_numpy(time_domain_data)
 
         # Obtain the label for the specified record
         label = self.diagnosis[record.comments[4]]

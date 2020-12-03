@@ -69,6 +69,11 @@ def main():
                         required=False,
                         default=None,
                         help='Indicates whether fft data is used for graph creation')
+    parser.add_argument('--filter',
+                        type=bool,
+                        required=False,
+                        default=None,
+                        help='Indicates whether data is filtered')
     parser.add_argument('--fft_data',
                         type=bool,
                         required=False,
@@ -156,6 +161,8 @@ def main():
     fft_points_to_keep = args.fft_points_to_keep
     fc_hidden_1 = args.fc_hidden_1
     fc_hidden_2 = args.fc_hidden_2
+    epochs = args.epochs
+    use_filter = args.filter
 
     # Set torch seed for reproducability
     torch.manual_seed(10)
@@ -176,7 +183,7 @@ def main():
         k=k,
         n_jobs=5,
         fft_data=fft_data,
-        filter=False,
+        filter=use_filter,
         fft_graph=fft_graph,
         samp_from=samp_from,
         samp_to=samp_to,
@@ -213,12 +220,12 @@ def main():
 
     # Create the model
     model = GraphConvBinaryClassifier(in_dim=input_dim,
-                                            hidden_dim_1=hidden_dim_1,
-                                            hidden_dim_2=hidden_dim_2,
-                                            num_classes=1,
-                                            use_cuda=False,
-                                            fc_hidden_1=fc_hidden_1,
-                                            fc_hidden_2=fc_hidden_2)
+                                      hidden_dim_1=hidden_dim_1,
+                                      hidden_dim_2=hidden_dim_2,
+                                      num_classes=1,
+                                      use_cuda=False,
+                                      fc_hidden_1=fc_hidden_1,
+                                      fc_hidden_2=fc_hidden_2)
 
     # Define the loss function
     loss_func = nn.BCELoss()
@@ -237,7 +244,7 @@ def main():
 
     max_val_acc = 0
 
-    for epoch in range(100):
+    for epoch in range(epochs):
 
         # Enter training mode
         model.train()
