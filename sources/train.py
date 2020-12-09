@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader
 from sources.model import GraphConvBinaryClassifier
 from sources.model import GraphSageBinaryClassifier
 from sources.model import SimpleGraphConvBinaryClassifier
+from sources.model import GraphAttentionConvBinaryClassifier
 import logging
 import torch.nn as nn
 import torch.optim as optim
@@ -353,7 +354,7 @@ def main():
                 # Accumulate validation loss
                 epoch_loss += loss.detach().item()
 
-            epoch_loss /= train_dataset_len
+            epoch_loss /= val_dataset_len
             y_true = np.array(y_true).flatten()
             y_pred = np.array(y_pred).flatten()
 
