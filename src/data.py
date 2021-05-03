@@ -245,6 +245,9 @@ class PtbEcgDataSet(Dataset):
         records_file = open(records_dir)
         self.records_dirs = [os.path.join(root_dir, s) for s in records_file.read().split('\n')]
 
+        # Ignore last entry in RECORDS file as that's just a new line
+        self.records_dirs = self.records_dirs[:-1]
+
         # Remove data points with no diagnosis
         self.records_dirs = [i for j, i in enumerate(self.records_dirs) if j not in records_to_exclude]
 
