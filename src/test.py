@@ -1,18 +1,15 @@
-from sources.data import PtbEcgDataSet
+
 from torch.utils.data import DataLoader
-from sources.model import GraphConvBinaryClassifier
-from sources.model import GraphSageBinaryClassifier
-from sources.model import SimpleGraphConvBinaryClassifier
-from sources.model import GraphAttentionConvBinaryClassifier
+from model import GraphConvBinaryClassifier
+from model import GraphSageBinaryClassifier
+from model import SimpleGraphConvBinaryClassifier
+from model import GraphAttentionConvBinaryClassifier
 import logging
 import torch.nn as nn
-import torch.optim as optim
-from sklearn.metrics import accuracy_score
-from sources.data import collate
+from data import collate
+from data import PtbEcgDataSet
 import numpy as np
 import torch
-from torch.utils.data import random_split
-import visdom
 from sklearn.metrics import roc_auc_score
 import argparse
 

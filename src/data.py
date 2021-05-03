@@ -1,13 +1,11 @@
+
 import wfdb
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import normalize
 import numpy as np
 import scipy.sparse as sp
-import matplotlib.pyplot as plt
-import wfdb.plot as wfplt
 from torch.utils.data import Dataset
 import os
-from scipy.sparse import coo_matrix
 import dgl
 from sklearn.decomposition import PCA
 from datetime import datetime
@@ -342,9 +340,6 @@ class PtbEcgDataSet(Dataset):
         # Only 3 categories (Mycordial infarction, healthy, other diseases)
         if (label is not 0) and (label is not 1):
             label = 1
-
-        # if label==1:
-        #     wfdb.plot_wfdb(record)
 
         return g, label
 
