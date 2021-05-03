@@ -1,3 +1,10 @@
+"""
+Author: Masoud Mokhtari
+
+Graph Neural Network (GNN) models used to train on K-Nearest Neighbour (KNN) graphs created using Fast Fourier
+Transform (FFT) of ECG signals.
+
+"""
 
 from dgl.nn.pytorch.conv import GATConv
 from dgl.nn.pytorch.conv import GraphConv

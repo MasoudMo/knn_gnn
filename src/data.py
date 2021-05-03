@@ -1,3 +1,9 @@
+"""
+Author: Masoud Mokhtari
+
+Data preprocessing including filtering, Fast Fourier Transform (FFT) and dimensionality reduction on ECG signals.
+
+"""
 
 import wfdb
 from sklearn.neighbors import NearestNeighbors

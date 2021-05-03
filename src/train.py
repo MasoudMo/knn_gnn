@@ -1,4 +1,10 @@
+"""
+Author: Masoud Mokhtari
 
+Trains a Graph Neural Network (GNN) model on K-Nearest Neighbour (KNN) graphs created using Fast Fourier Transform (FFT)
+of ECG signals. Each graph contains 15 nodes with each node corresponding to one channel of ECG data.
+
+"""
 
 from torch.utils.data import DataLoader
 from model import GraphConvBinaryClassifier
