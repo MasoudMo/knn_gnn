@@ -37,12 +37,12 @@ def main():
     parser.add_argument('--best_model_path',
                         type=str,
                         required=False,
-                        default="./model.pt",
+                        default="../models/model.pt",
                         help='Path to save the best model to (Should contain the file name. e.g model.py)')
     parser.add_argument('--data_path',
                         type=str,
                         required=False,
-                        default='H:\Workspace\ELEC 421\ecg_gnn\data\ptb-diagnostic-ecg-database-1.0.0\ptb-diagnostic-ecg-database-1.0.0',
+                        default='../data/',
                         help='Path to dataset')
     parser.add_argument('--k',
                         type=int,
@@ -77,7 +77,7 @@ def main():
     parser.add_argument('--pca_dim',
                         type=int,
                         required=False,
-                        default=None,
+                        default=15,
                         help='Indicates the dimension to use for PCA.')
     parser.add_argument('--fft_points_to_keep',
                         type=int,
