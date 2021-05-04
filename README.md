@@ -5,7 +5,7 @@ In this experiment, 15-node K-Nearest Neighbour (KNN) graphs are created with ea
 
 The preprocessing used to create the KNN graphs is illustrated in figure below:
 
-![alt text](https://github.com/MasoudMo/knn_gnn/blob/master/docs/knn_gnn.PNG?raw=true)
+![data preprocessing](https://github.com/MasoudMo/knn_gnn/blob/master/docs/knn_gnn.PNG?raw=true)
 
 ## Usage
 The dataset can directly be downloaded as a zip file from the following link: 
