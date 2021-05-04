@@ -41,7 +41,7 @@ def main():
                         type=str,
                         required=False,
                         default="../models/model.pt",
-                        help='Path to save the best model to (Should contain the file name. e.g model.py)')
+                        help='Path to save the best model to (Should contain the file name. e.g model.pt)')
     parser.add_argument('--history_path',
                         type=str,
                         required=False,

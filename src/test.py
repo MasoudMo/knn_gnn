@@ -33,12 +33,12 @@ logger.addHandler(ch)
 def main():
 
     # Command line argument parser
-    parser = argparse.ArgumentParser(description='GNN training on ECG dataset')
+    parser = argparse.ArgumentParser(description='GNN inference on ECG dataset')
     parser.add_argument('--best_model_path',
                         type=str,
                         required=False,
                         default="../models/model.pt",
-                        help='Path to save the best model to (Should contain the file name. e.g model.py)')
+                        help='Path to load the best model from (Should contain the file name. e.g model.pt)')
     parser.add_argument('--data_path',
                         type=str,
                         required=False,
