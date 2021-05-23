@@ -7,6 +7,18 @@ The preprocessing used to create the KNN graphs is illustrated in figure below:
 
 ![data preprocessing](https://github.com/MasoudMo/knn_gnn/blob/master/docs/knn_gnn.PNG?raw=true)
 
+## Requirements
+<ul>
+<li>wfdb~=3.3.0</li>
+<li>numpy~=1.20.2</li>
+<li>scipy~=1.6.3</li>
+<li>dgl~=0.6.1</li>
+<li>torch~=1.8.1</li>
+<li>sklearn~=0.0</li>
+<li>scikit-learn~=0.24.2</li>
+<li>visdom~=0.1.8.9</li>
+</ul>
+
 ## Usage
 The dataset can directly be downloaded as a zip file from the following link: 
 [PTB Diagnostic Databse](https://www.physionet.org/content/ptbdb/1.0.0/)
